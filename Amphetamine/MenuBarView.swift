@@ -54,14 +54,13 @@ struct MenuBarView: View {
 
         Toggle("Keep Slack Active (Mouse Jiggler)", isOn: $sessionTimer.isMouseJigglerEnabled)
 
-        Menu("Menu Bar Icon") {
+        Picker(selection: $menuBarIconRaw) {
             ForEach(MenuBarIcon.allCases) { icon in
-                Button {
-                    menuBarIconRaw = icon.rawValue
-                } label: {
-                    Label(icon.displayName, systemImage: icon.rawValue)
-                }
+                Label(icon.displayName, systemImage: icon.rawValue)
+                    .tag(icon.rawValue)
             }
+        } label: {
+            Text("Menu Bar Icon")
         }
 
         Toggle("Launch at Login", isOn: Binding(
