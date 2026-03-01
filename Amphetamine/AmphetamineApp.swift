@@ -4,15 +4,20 @@ import SwiftUI
 struct AmphetamineApp: App {
     @StateObject private var sessionTimer = SessionTimer()
     @AppStorage("showCountdownInMenuBar") private var showCountdown = false
+    @AppStorage("menuBarIcon") private var menuBarIconRaw = "pill"
+
+    private var menuBarIcon: MenuBarIcon {
+        MenuBarIcon(rawValue: menuBarIconRaw) ?? .pill
+    }
 
     var body: some Scene {
         MenuBarExtra {
             MenuBarView(sessionTimer: sessionTimer)
         } label: {
             if showCountdown && sessionTimer.isRunning && sessionTimer.selectedDuration != .indefinite {
-                Label(sessionTimer.formattedTimeRemaining, systemImage: "pill.fill")
+                Label(sessionTimer.formattedTimeRemaining, systemImage: menuBarIcon.filledSymbol)
             } else {
-                Image(systemName: sessionTimer.isRunning ? "pill.fill" : "pill")
+                Image(systemName: sessionTimer.isRunning ? menuBarIcon.filledSymbol : menuBarIcon.rawValue)
             }
         }
         .menuBarExtraStyle(.menu)

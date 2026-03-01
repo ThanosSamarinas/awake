@@ -29,8 +29,15 @@ final class SessionTimer: ObservableObject {
     @Published var isRunning = false
     @Published var remainingSeconds: Int = 0
     @Published var selectedDuration: SessionDuration = .indefinite
+    @Published var isMouseJigglerEnabled: Bool = UserDefaults.standard.bool(forKey: "mouseJigglerEnabled") {
+        didSet {
+            UserDefaults.standard.set(isMouseJigglerEnabled, forKey: "mouseJigglerEnabled")
+            updateMouseJiggler()
+        }
+    }
 
     private let powerManager = PowerManager()
+    private let mouseJiggler = MouseJiggler()
     private var timer: AnyCancellable?
 
     func start(duration: SessionDuration) {
@@ -38,6 +45,7 @@ final class SessionTimer: ObservableObject {
         selectedDuration = duration
         powerManager.startKeepingAwake()
         isRunning = true
+        updateMouseJiggler()
 
         guard duration != .indefinite else { return }
 
@@ -57,6 +65,7 @@ final class SessionTimer: ObservableObject {
     func stop() {
         timer?.cancel()
         timer = nil
+        mouseJiggler.stop()
         powerManager.stopKeepingAwake()
         isRunning = false
         remainingSeconds = 0
@@ -64,6 +73,14 @@ final class SessionTimer: ObservableObject {
 
     func toggle() {
         isRunning ? stop() : start(duration: selectedDuration)
+    }
+
+    private func updateMouseJiggler() {
+        if isRunning && isMouseJigglerEnabled {
+            mouseJiggler.start()
+        } else {
+            mouseJiggler.stop()
+        }
     }
 
     var formattedTimeRemaining: String {

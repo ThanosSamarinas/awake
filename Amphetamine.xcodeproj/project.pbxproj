@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		2140C4D2EE03A25946009E7A /* PowerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD69E5D5BAFAE2FE1F2DAA0 /* PowerManager.swift */; };
 		58C55068077382D14DDA1CE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD01EBE0AB4C6A472634982E /* Assets.xcassets */; };
+		5AFA5E6291031C81363B66FE /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56EB96FC8054D49527FE929 /* MenuBarIcon.swift */; };
 		64A085401DBDE5F317F0921C /* AmphetamineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAED618B0A185BB4513E280 /* AmphetamineApp.swift */; };
+		6D8DD1E5F13019054F4F2D38 /* MouseJiggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C34DD43805C59F6F97599B /* MouseJiggler.swift */; };
 		74A6E63A1E9C227B1DA3B3F1 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6D0566984C1F86F126E38C /* MenuBarView.swift */; };
 		9C07375E25A8D1D7A0489876 /* SessionTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3765407BDB59B1E5D6D9BC0 /* SessionTimer.swift */; };
 /* End PBXBuildFile section */
@@ -18,7 +20,9 @@
 		7DD69E5D5BAFAE2FE1F2DAA0 /* PowerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerManager.swift; sourceTree = "<group>"; };
 		7EAED618B0A185BB4513E280 /* AmphetamineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmphetamineApp.swift; sourceTree = "<group>"; };
 		7ED550ACE878F03332840317 /* Amphetamine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Amphetamine.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		89C34DD43805C59F6F97599B /* MouseJiggler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseJiggler.swift; sourceTree = "<group>"; };
 		AE6D0566984C1F86F126E38C /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		B56EB96FC8054D49527FE929 /* MenuBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarIcon.swift; sourceTree = "<group>"; };
 		E3765407BDB59B1E5D6D9BC0 /* SessionTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTimer.swift; sourceTree = "<group>"; };
 		EFDB66917B0DF1702769537F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FD01EBE0AB4C6A472634982E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -31,7 +35,9 @@
 				7EAED618B0A185BB4513E280 /* AmphetamineApp.swift */,
 				FD01EBE0AB4C6A472634982E /* Assets.xcassets */,
 				EFDB66917B0DF1702769537F /* Info.plist */,
+				B56EB96FC8054D49527FE929 /* MenuBarIcon.swift */,
 				AE6D0566984C1F86F126E38C /* MenuBarView.swift */,
+				89C34DD43805C59F6F97599B /* MouseJiggler.swift */,
 				7DD69E5D5BAFAE2FE1F2DAA0 /* PowerManager.swift */,
 				E3765407BDB59B1E5D6D9BC0 /* SessionTimer.swift */,
 			);
@@ -125,7 +131,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				64A085401DBDE5F317F0921C /* AmphetamineApp.swift in Sources */,
+				5AFA5E6291031C81363B66FE /* MenuBarIcon.swift in Sources */,
 				74A6E63A1E9C227B1DA3B3F1 /* MenuBarView.swift in Sources */,
+				6D8DD1E5F13019054F4F2D38 /* MouseJiggler.swift in Sources */,
 				2140C4D2EE03A25946009E7A /* PowerManager.swift in Sources */,
 				9C07375E25A8D1D7A0489876 /* SessionTimer.swift in Sources */,
 			);

@@ -4,6 +4,7 @@ import ServiceManagement
 struct MenuBarView: View {
     @ObservedObject var sessionTimer: SessionTimer
     @AppStorage("showCountdownInMenuBar") private var showCountdown = false
+    @AppStorage("menuBarIcon") private var menuBarIconRaw = "pill"
 
     var body: some View {
         if sessionTimer.isRunning {
@@ -50,6 +51,18 @@ struct MenuBarView: View {
     @ViewBuilder
     private var settingsSection: some View {
         Toggle("Show Time in Menu Bar", isOn: $showCountdown)
+
+        Toggle("Keep Slack Active (Mouse Jiggler)", isOn: $sessionTimer.isMouseJigglerEnabled)
+
+        Menu("Menu Bar Icon") {
+            ForEach(MenuBarIcon.allCases) { icon in
+                Button {
+                    menuBarIconRaw = icon.rawValue
+                } label: {
+                    Label(icon.displayName, systemImage: icon.rawValue)
+                }
+            }
+        }
 
         Toggle("Launch at Login", isOn: Binding(
             get: { SMAppService.mainApp.status == .enabled },
