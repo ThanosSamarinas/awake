@@ -54,8 +54,21 @@ final class SessionTimer: ObservableObject {
         updateMouseJiggler()
 
         guard duration != .indefinite else { return }
+        startCountdown(seconds: duration.rawValue)
+    }
 
-        remainingSeconds = duration.rawValue
+    func startCustom(seconds: Int) {
+        stop()
+        selectedDuration = .indefinite  // sentinel so formattedTimeRemaining works via remainingSeconds
+        powerManager.startKeepingAwake(keepDisplayAwake: keepDisplayAwake)
+        isRunning = powerManager.isActive
+        guard isRunning else { return }
+        updateMouseJiggler()
+        startCountdown(seconds: seconds)
+    }
+
+    private func startCountdown(seconds: Int) {
+        remainingSeconds = seconds
         timer = Timer.publish(every: 1, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
@@ -89,9 +102,11 @@ final class SessionTimer: ObservableObject {
         }
     }
 
+    private var isTimed: Bool { remainingSeconds > 0 }
+
     /// Second-precision, used only in the menu bar icon label.
     var formattedTimeRemaining: String {
-        guard selectedDuration != .indefinite else { return "∞" }
+        guard isTimed else { return "∞" }
         let hours = remainingSeconds / 3600
         let minutes = (remainingSeconds % 3600) / 60
         let seconds = remainingSeconds % 60
@@ -103,7 +118,7 @@ final class SessionTimer: ObservableObject {
 
     /// Minute-precision, used inside the menu body to avoid per-second re-renders.
     var coarseTimeRemaining: String {
-        guard selectedDuration != .indefinite else { return "indefinitely" }
+        guard isTimed else { return "indefinitely" }
         let totalMinutes = Int(ceil(Double(remainingSeconds) / 60.0))
         let hours = totalMinutes / 60
         let minutes = totalMinutes % 60

@@ -57,6 +57,12 @@ struct MenuBarView: View {
                 sessionTimer.start(duration: duration)
             }
         }
+
+        Button("Custom...") {
+            if let seconds = askForCustomDuration() {
+                sessionTimer.startCustom(seconds: seconds)
+            }
+        }
     }
 
     @ViewBuilder

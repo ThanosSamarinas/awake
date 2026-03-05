@@ -14,7 +14,7 @@ struct AmphetamineApp: App {
         MenuBarExtra {
             MenuBarView(sessionTimer: sessionTimer)
         } label: {
-            if showCountdown && sessionTimer.isRunning && sessionTimer.selectedDuration != .indefinite {
+            if showCountdown && sessionTimer.isRunning && sessionTimer.remainingSeconds > 0 {
                 Label(sessionTimer.formattedTimeRemaining, systemImage: menuBarIcon.filledSymbol)
             } else {
                 Image(systemName: sessionTimer.isRunning ? menuBarIcon.filledSymbol : menuBarIcon.rawValue)
