@@ -1,20 +1,33 @@
 import Foundation
 import IOKit.pwr_mgt
 
-final class PowerManager {
-    private var assertionID: IOPMAssertionID = 0
-    private(set) var isActive = false
+final class PowerManager: ObservableObject {
+    @Published private(set) var isActive = false
+    @Published private(set) var assertionFailed = false
 
-    func startKeepingAwake(reason: String = "Amphetamine is keeping your Mac awake") {
+    private var assertionID: IOPMAssertionID = 0
+
+    func startKeepingAwake(keepDisplayAwake: Bool, reason: String = "Amphetamine is keeping your Mac awake") {
         guard !isActive else { return }
 
+        let assertionType = keepDisplayAwake
+            ? kIOPMAssertionTypePreventUserIdleDisplaySleep
+            : kIOPMAssertionTypePreventUserIdleSystemSleep
+
         let result = IOPMAssertionCreateWithName(
-            kIOPMAssertionTypePreventUserIdleSystemSleep as CFString,
+            assertionType as CFString,
             IOPMAssertionLevel(kIOPMAssertionLevelOn),
             reason as CFString,
             &assertionID
         )
-        isActive = result == kIOReturnSuccess
+
+        if result == kIOReturnSuccess {
+            isActive = true
+            assertionFailed = false
+        } else {
+            isActive = false
+            assertionFailed = true
+        }
     }
 
     func stopKeepingAwake() {

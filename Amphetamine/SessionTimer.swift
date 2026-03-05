@@ -35,16 +35,22 @@ final class SessionTimer: ObservableObject {
             updateMouseJiggler()
         }
     }
+    @Published var keepDisplayAwake: Bool = UserDefaults.standard.object(forKey: "keepDisplayAwake") as? Bool ?? true {
+        didSet {
+            UserDefaults.standard.set(keepDisplayAwake, forKey: "keepDisplayAwake")
+        }
+    }
 
-    private let powerManager = PowerManager()
+    let powerManager = PowerManager()
     private let mouseJiggler = MouseJiggler()
     private var timer: AnyCancellable?
 
     func start(duration: SessionDuration) {
         stop()
         selectedDuration = duration
-        powerManager.startKeepingAwake()
-        isRunning = true
+        powerManager.startKeepingAwake(keepDisplayAwake: keepDisplayAwake)
+        isRunning = powerManager.isActive
+        guard isRunning else { return }
         updateMouseJiggler()
 
         guard duration != .indefinite else { return }
@@ -83,6 +89,7 @@ final class SessionTimer: ObservableObject {
         }
     }
 
+    /// Second-precision, used only in the menu bar icon label.
     var formattedTimeRemaining: String {
         guard selectedDuration != .indefinite else { return "∞" }
         let hours = remainingSeconds / 3600
@@ -92,5 +99,20 @@ final class SessionTimer: ObservableObject {
             return String(format: "%d:%02d:%02d", hours, minutes, seconds)
         }
         return String(format: "%d:%02d", minutes, seconds)
+    }
+
+    /// Minute-precision, used inside the menu body to avoid per-second re-renders.
+    var coarseTimeRemaining: String {
+        guard selectedDuration != .indefinite else { return "indefinitely" }
+        let totalMinutes = Int(ceil(Double(remainingSeconds) / 60.0))
+        let hours = totalMinutes / 60
+        let minutes = totalMinutes % 60
+        if hours > 0 && minutes > 0 {
+            return "\(hours)h \(minutes)m remaining"
+        } else if hours > 0 {
+            return "\(hours)h remaining"
+        } else {
+            return "\(max(minutes, 1))m remaining"
+        }
     }
 }

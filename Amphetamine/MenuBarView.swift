@@ -7,6 +7,11 @@ struct MenuBarView: View {
     @AppStorage("menuBarIcon") private var menuBarIconRaw = "pill"
 
     var body: some View {
+        if sessionTimer.powerManager.assertionFailed {
+            failureSection
+            Divider()
+        }
+
         if sessionTimer.isRunning {
             statusSection
             Divider()
@@ -26,11 +31,17 @@ struct MenuBarView: View {
     // MARK: - Sections
 
     @ViewBuilder
+    private var failureSection: some View {
+        Text("⚠️ Could not prevent sleep")
+        Text("macOS denied the power assertion.")
+    }
+
+    @ViewBuilder
     private var statusSection: some View {
         if sessionTimer.selectedDuration == .indefinite {
             Text("Active — Indefinitely")
         } else {
-            Text("Active — \(sessionTimer.formattedTimeRemaining) remaining")
+            Text("Active — \(sessionTimer.coarseTimeRemaining)")
         }
 
         Button("End Session") {
@@ -50,8 +61,7 @@ struct MenuBarView: View {
 
     @ViewBuilder
     private var settingsSection: some View {
-        Toggle("Show Time in Menu Bar", isOn: $showCountdown)
-
+        Toggle("Keep Display Awake", isOn: $sessionTimer.keepDisplayAwake)
         Toggle("Keep Slack Active (Mouse Jiggler)", isOn: $sessionTimer.isMouseJigglerEnabled)
 
         Picker(selection: $menuBarIconRaw) {
@@ -62,6 +72,8 @@ struct MenuBarView: View {
         } label: {
             Text("Menu Bar Icon")
         }
+
+        Toggle("Show Time in Menu Bar", isOn: $showCountdown)
 
         Toggle("Launch at Login", isOn: Binding(
             get: { SMAppService.mainApp.status == .enabled },
