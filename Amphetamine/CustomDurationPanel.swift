@@ -14,13 +14,14 @@ func askForCustomDuration() -> Int? {
     panel.level = .floating
 
     let header = NSTextField(labelWithString: "Custom Duration")
-    header.font = .boldSystemFont(ofSize: 13)
+    header.font = .systemFont(ofSize: 13)
 
     let subtitle = NSTextField(labelWithString: "Enter how long to keep your Mac awake.")
     subtitle.font = .systemFont(ofSize: 13)
     subtitle.textColor = .secondaryLabelColor
     subtitle.lineBreakMode = .byWordWrapping
     subtitle.maximumNumberOfLines = 0
+    subtitle.translatesAutoresizingMaskIntoConstraints = false
 
 
     let hoursField = makeNumberField(placeholder: "0")
@@ -67,13 +68,15 @@ func askForCustomDuration() -> Int? {
     contentView.addSubview(stack)
     panel.contentView = contentView
 
+    let inset = stack.edgeInsets.left + stack.edgeInsets.right
     NSLayoutConstraint.activate([
         stack.topAnchor.constraint(equalTo: contentView.topAnchor),
         stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
         stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-        stack.widthAnchor.constraint(equalToConstant: 320),
-        buttonRow.widthAnchor.constraint(equalTo: stack.widthAnchor, constant: -64),
+        stack.widthAnchor.constraint(equalToConstant: 240),
+        subtitle.widthAnchor.constraint(equalTo: stack.widthAnchor, constant: -inset),
+        buttonRow.widthAnchor.constraint(equalTo: stack.widthAnchor, constant: -inset),
     ])
 
     panel.setContentSize(stack.fittingSize)
