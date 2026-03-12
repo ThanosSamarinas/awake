@@ -1,5 +1,5 @@
-APP_NAME = Amphetamine
-SCHEME = Amphetamine
+APP_NAME = Awake
+SCHEME = Awake
 BUILD_DIR = build
 RELEASE_DIR = $(BUILD_DIR)/release
 DMG_NAME = $(APP_NAME).dmg

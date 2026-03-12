@@ -7,7 +7,7 @@ final class PowerManager: ObservableObject {
 
     private var assertionID: IOPMAssertionID = 0
 
-    func startKeepingAwake(keepDisplayAwake: Bool, reason: String = "Amphetamine is keeping your Mac awake") {
+    func startKeepingAwake(keepDisplayAwake: Bool, reason: String = "Awake is keeping your Mac awake") {
         guard !isActive else { return }
 
         let assertionType = keepDisplayAwake
@@ -28,6 +28,12 @@ final class PowerManager: ObservableObject {
             isActive = false
             assertionFailed = true
         }
+    }
+
+    func restartKeepingAwake(keepDisplayAwake: Bool) {
+        guard isActive else { return }
+        stopKeepingAwake()
+        startKeepingAwake(keepDisplayAwake: keepDisplayAwake)
     }
 
     func stopKeepingAwake() {

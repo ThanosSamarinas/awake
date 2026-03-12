@@ -1,23 +1,23 @@
 import Foundation
 
 enum MenuBarIcon: String, CaseIterable, Identifiable {
-    case pill = "pill"
-    case bolt = "bolt"
-    case coffee = "cup.and.saucer"
-    case flame = "flame"
+    case sun = "sun.max"
     case eye = "eye"
-    case hare = "hare"
+    case bolt = "bolt"
+    case lightbulb = "lightbulb"
+    case coffee = "cup.and.saucer"
+    case sunrise = "sunrise"
 
     var id: String { rawValue }
 
     var displayName: String {
         switch self {
-        case .pill: return "Pill"
-        case .bolt: return "Lightning Bolt"
-        case .coffee: return "Coffee Cup"
-        case .flame: return "Flame"
+        case .sun: return "Sun"
         case .eye: return "Eye"
-        case .hare: return "Rabbit"
+        case .bolt: return "Lightning Bolt"
+        case .lightbulb: return "Lightbulb"
+        case .coffee: return "Coffee Cup"
+        case .sunrise: return "Sunrise"
         }
     }
 

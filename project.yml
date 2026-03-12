@@ -1,22 +1,22 @@
-name: Amphetamine
+name: Awake
 options:
-  bundleIdPrefix: com.amphetamine
+  bundleIdPrefix: com.awake
   deploymentTarget:
     macOS: "13.0"
   createIntermediateGroups: true
 
 targets:
-  Amphetamine:
+  Awake:
     type: application
     platform: macOS
     sources:
-      - Amphetamine
+      - Awake
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.amphetamine.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.awake.app
         MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
-        INFOPLIST_FILE: Amphetamine/Info.plist
+        INFOPLIST_FILE: Awake/Info.plist
         GENERATE_INFOPLIST_FILE: NO
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_VERSION: "5.9"

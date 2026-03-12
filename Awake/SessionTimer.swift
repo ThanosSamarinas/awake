@@ -29,6 +29,8 @@ final class SessionTimer: ObservableObject {
     @Published var isRunning = false
     @Published var remainingSeconds: Int = 0
     @Published var selectedDuration: SessionDuration = .indefinite
+    @Published var customSeconds: Int?
+    @Published var isScheduleSession = false
     @Published var isMouseJigglerEnabled: Bool = UserDefaults.standard.bool(forKey: "mouseJigglerEnabled") {
         didSet {
             UserDefaults.standard.set(isMouseJigglerEnabled, forKey: "mouseJigglerEnabled")
@@ -38,20 +40,31 @@ final class SessionTimer: ObservableObject {
     @Published var keepDisplayAwake: Bool = UserDefaults.standard.object(forKey: "keepDisplayAwake") as? Bool ?? true {
         didSet {
             UserDefaults.standard.set(keepDisplayAwake, forKey: "keepDisplayAwake")
+            if isRunning {
+                powerManager.restartKeepingAwake(keepDisplayAwake: keepDisplayAwake)
+            }
+        }
+    }
+    @Published var batteryStopThreshold: Int = UserDefaults.standard.object(forKey: "batteryStopThreshold") as? Int ?? 0 {
+        didSet {
+            UserDefaults.standard.set(batteryStopThreshold, forKey: "batteryStopThreshold")
         }
     }
 
     let powerManager = PowerManager()
     private let mouseJiggler = MouseJiggler()
     private var timer: AnyCancellable?
+    private var lastSessionLabel: String = ""
 
     func start(duration: SessionDuration) {
         stop()
         selectedDuration = duration
+        customSeconds = nil
         powerManager.startKeepingAwake(keepDisplayAwake: keepDisplayAwake)
         isRunning = powerManager.isActive
         guard isRunning else { return }
         updateMouseJiggler()
+        lastSessionLabel = duration.label
 
         guard duration != .indefinite else { return }
         startCountdown(seconds: duration.rawValue)
@@ -59,12 +72,22 @@ final class SessionTimer: ObservableObject {
 
     func startCustom(seconds: Int) {
         stop()
-        selectedDuration = .indefinite  // sentinel so formattedTimeRemaining works via remainingSeconds
+        selectedDuration = .indefinite
+        customSeconds = seconds
         powerManager.startKeepingAwake(keepDisplayAwake: keepDisplayAwake)
         isRunning = powerManager.isActive
         guard isRunning else { return }
         updateMouseJiggler()
+        lastSessionLabel = formattedDuration(seconds)
         startCountdown(seconds: seconds)
+    }
+
+    func restartLastSession() {
+        if let custom = customSeconds {
+            startCustom(seconds: custom)
+        } else {
+            start(duration: selectedDuration)
+        }
     }
 
     private func startCountdown(seconds: Int) {
@@ -76,7 +99,9 @@ final class SessionTimer: ObservableObject {
                 if self.remainingSeconds > 0 {
                     self.remainingSeconds -= 1
                 } else {
+                    let label = self.lastSessionLabel
                     self.stop()
+                    NotificationManager.shared.postSessionEnded(durationLabel: label)
                 }
             }
     }
@@ -87,11 +112,18 @@ final class SessionTimer: ObservableObject {
         mouseJiggler.stop()
         powerManager.stopKeepingAwake()
         isRunning = false
+        isScheduleSession = false
         remainingSeconds = 0
     }
 
     func toggle() {
-        isRunning ? stop() : start(duration: selectedDuration)
+        if isRunning {
+            stop()
+        } else if let custom = customSeconds {
+            startCustom(seconds: custom)
+        } else {
+            start(duration: selectedDuration)
+        }
     }
 
     private func updateMouseJiggler() {
@@ -104,7 +136,6 @@ final class SessionTimer: ObservableObject {
 
     private var isTimed: Bool { remainingSeconds > 0 }
 
-    /// Second-precision, used only in the menu bar icon label.
     var formattedTimeRemaining: String {
         guard isTimed else { return "∞" }
         let hours = remainingSeconds / 3600
@@ -116,7 +147,6 @@ final class SessionTimer: ObservableObject {
         return String(format: "%d:%02d", minutes, seconds)
     }
 
-    /// Minute-precision, used inside the menu body to avoid per-second re-renders.
     var coarseTimeRemaining: String {
         guard isTimed else { return "indefinitely" }
         let totalMinutes = Int(ceil(Double(remainingSeconds) / 60.0))
@@ -129,5 +159,13 @@ final class SessionTimer: ObservableObject {
         } else {
             return "\(max(minutes, 1))m remaining"
         }
+    }
+
+    private func formattedDuration(_ seconds: Int) -> String {
+        let h = seconds / 3600
+        let m = (seconds % 3600) / 60
+        if h > 0 && m > 0 { return "\(h)h \(m)m" }
+        if h > 0 { return "\(h)h" }
+        return "\(m)m"
     }
 }

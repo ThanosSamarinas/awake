@@ -1,4 +1,4 @@
-# Amphetamine
+# Awake
 
 A lightweight macOS menu bar app that keeps your Mac awake. No Dock icon, no clutter — just a small icon in your menu bar.
 
@@ -20,9 +20,9 @@ A lightweight macOS menu bar app that keeps your Mac awake. No Dock icon, no clu
 
 ### Download
 
-1. Download the latest `Amphetamine.dmg` from the [Releases](../../releases) page
-2. Open the DMG and drag **Amphetamine** to your Applications folder
-3. Launch Amphetamine from Applications
+1. Download the latest `Awake.dmg` from the [Releases](../../releases) page
+2. Open the DMG and drag **Awake** to your Applications folder
+3. Launch Awake from Applications
 4. Since the app is not notarized, macOS will block it the first time. Right-click the app → **Open** → **Open** to allow it
 
 ### Build from source
@@ -34,13 +34,13 @@ Prerequisites: [Xcode](https://developer.apple.com/xcode/) and [XcodeGen](https:
 brew install xcodegen
 
 # Clone and build
-git clone https://github.com/YOUR_USERNAME/amphetamine.git
-cd amphetamine
+git clone https://github.com/YOUR_USERNAME/awake.git
+cd awake
 xcodegen generate
 make dmg
 ```
 
-The DMG will be at `build/Amphetamine.dmg`. Or use `make install` to copy directly to `/Applications`.
+The DMG will be at `build/Awake.dmg`. Or use `make install` to copy directly to `/Applications`.
 
 #### Other make targets
 
@@ -67,22 +67,22 @@ The icon switches from outline to filled when a session is active.
 
 ## How it works
 
-Amphetamine uses the macOS [`IOPMAssertionCreateWithName`](https://developer.apple.com/documentation/iokit/1557134-iopmassertioncreatewithname) API to create a power assertion that prevents the system from idle-sleeping. This is the same mechanism used by the built-in `caffeinate` command. The assertion is released when the session ends or the app quits.
+Awake uses the macOS [`IOPMAssertionCreateWithName`](https://developer.apple.com/documentation/iokit/1557134-iopmassertioncreatewithname) API to create a power assertion that prevents the system from idle-sleeping. This is the same mechanism used by the built-in `caffeinate` command. The assertion is released when the session ends or the app quits.
 
 The mouse jiggler uses `CGWarpMouseCursorPosition` to move the cursor 1 pixel and back every 4 minutes — invisible to the user but enough to register as activity.
 
 ## Project structure
 
 ```
-Amphetamine/
-├── AmphetamineApp.swift    # App entry point, MenuBarExtra with dynamic icon
-├── MenuBarView.swift       # Dropdown menu UI
-├── PowerManager.swift      # IOKit power assertion wrapper
-├── SessionTimer.swift      # Countdown timer and session management
-├── MouseJiggler.swift      # Periodic mouse movement
-├── MenuBarIcon.swift       # Available menu bar icon options
-├── Info.plist              # LSUIElement=true (menu bar only)
-└── Assets.xcassets/        # Asset catalog
+Awake/
+├── AwakeApp.swift         # App entry point, MenuBarExtra with dynamic icon
+├── MenuBarView.swift      # Dropdown menu UI
+├── PowerManager.swift     # IOKit power assertion wrapper
+├── SessionTimer.swift     # Countdown timer and session management
+├── MouseJiggler.swift     # Periodic mouse movement
+├── MenuBarIcon.swift      # Available menu bar icon options
+├── Info.plist             # LSUIElement=true (menu bar only)
+└── Assets.xcassets/       # Asset catalog
 ```
 
 ## Author
