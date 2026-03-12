@@ -85,11 +85,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func updateStatusItemAppearance() {
         guard let button = statusItem.button else { return }
-        let iconRaw = UserDefaults.standard.string(forKey: "menuBarIcon") ?? "sun.max"
-        let icon = MenuBarIcon(rawValue: iconRaw) ?? .sun
         let showCountdown = UserDefaults.standard.bool(forKey: "showCountdownInMenuBar")
-
-        let symbolName = sessionTimer.isRunning ? icon.filledSymbol : icon.rawValue
+        let symbolName = sessionTimer.isRunning ? "star.hexagon.fill" : "star.hexagon"
         button.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Awake")
 
         if showCountdown && sessionTimer.isRunning && sessionTimer.remainingSeconds > 0 {
@@ -107,7 +104,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 button.toolTip = "Awake — Active indefinitely"
             }
         } else {
-            button.toolTip = "Awake — Inactive\nClick to start, right-click for menu"
+            let nextLabel = sessionTimer.selectedDuration.label.lowercased()
+            button.toolTip = "Awake — Inactive\nClick to start (\(nextLabel)), right-click for menu"
         }
     }
 
@@ -134,44 +132,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         for duration in SessionDuration.allCases {
             menu.addItem(action(duration.label, sel: #selector(startDuration(_:)), tag: duration.rawValue))
         }
-        menu.addItem(action("Custom…", sel: #selector(startCustom)))
+        menu.addItem(submenuItem("Custom…", menu: buildCustomMenu()))
         menu.addItem(.separator())
 
-        let prefs = NSMenu()
-        prefs.addItem(toggle("Keep Display Awake", on: sessionTimer.keepDisplayAwake, sel: #selector(toggleDisplayAwake)))
-        prefs.addItem(toggle("Mouse Jiggler", on: sessionTimer.isMouseJigglerEnabled, sel: #selector(toggleMouseJiggler)))
-        prefs.addItem(.separator())
-        prefs.addItem(submenuItem("Menu Bar Icon", menu: buildIconMenu()))
-        prefs.addItem(toggle("Show Countdown in Menu Bar",
-                             on: UserDefaults.standard.bool(forKey: "showCountdownInMenuBar"),
-                             sel: #selector(toggleCountdown)))
-        prefs.addItem(toggle("Launch at Login",
-                             on: SMAppService.mainApp.status == .enabled,
-                             sel: #selector(toggleLaunchAtLogin)))
-        prefs.addItem(.separator())
-        prefs.addItem(submenuItem("Low Battery Cutoff", menu: buildBatteryMenu()))
-        prefs.addItem(.separator())
-        prefs.addItem(submenuItem("Schedule", menu: buildScheduleMenu()))
+        menu.addItem(toggle("Keep Display On", on: sessionTimer.keepDisplayAwake, sel: #selector(toggleDisplayAwake)))
+        menu.addItem(toggle("Keep Status Active", on: sessionTimer.isMouseJigglerEnabled, sel: #selector(toggleMouseJiggler)))
+        menu.addItem(toggle("Show Time Remaining", on: UserDefaults.standard.bool(forKey: "showCountdownInMenuBar"), sel: #selector(toggleCountdown)))
+        menu.addItem(.separator())
 
-        menu.addItem(submenuItem("Preferences", menu: prefs))
+        menu.addItem(submenuItem("Low Battery Cutoff", menu: buildBatteryMenu()))
+        menu.addItem(toggle("Launch at Login",
+                            on: SMAppService.mainApp.status == .enabled,
+                            sel: #selector(toggleLaunchAtLogin)))
         menu.addItem(.separator())
         menu.addItem(action("Quit Awake", sel: #selector(quitApp), key: "q"))
 
         return menu
-    }
-
-    private func buildIconMenu() -> NSMenu {
-        let m = NSMenu()
-        let current = UserDefaults.standard.string(forKey: "menuBarIcon") ?? "sun.max"
-        for icon in MenuBarIcon.allCases {
-            let item = NSMenuItem(title: icon.displayName, action: #selector(changeIcon(_:)), keyEquivalent: "")
-            item.target = self
-            item.image = NSImage(systemSymbolName: icon.rawValue, accessibilityDescription: nil)
-            item.representedObject = icon.rawValue
-            item.state = icon.rawValue == current ? .on : .off
-            m.addItem(item)
-        }
-        return m
     }
 
     private func buildBatteryMenu() -> NSMenu {
@@ -187,9 +163,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         return m
     }
 
-    private func buildScheduleMenu() -> NSMenu {
+    private func buildCustomMenu() -> NSMenu {
         let m = NSMenu()
-        m.addItem(toggle("Enable Schedule", on: scheduleManager.isEnabled, sel: #selector(toggleSchedule)))
+        m.addItem(action("Set Duration…", sel: #selector(startCustom)))
+        m.addItem(.separator())
+        m.addItem(toggle("Schedule", on: scheduleManager.isEnabled, sel: #selector(toggleSchedule)))
         m.addItem(disabled(scheduleManager.scheduleDescription))
         m.addItem(action("Set Times…", sel: #selector(setScheduleTimes)))
         return m
@@ -241,12 +219,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func toggleDisplayAwake() { sessionTimer.keepDisplayAwake.toggle() }
     @objc private func toggleMouseJiggler() { sessionTimer.isMouseJigglerEnabled.toggle() }
-
-    @objc private func changeIcon(_ sender: NSMenuItem) {
-        guard let raw = sender.representedObject as? String else { return }
-        UserDefaults.standard.set(raw, forKey: "menuBarIcon")
-        updateStatusItemAppearance()
-    }
 
     @objc private func toggleCountdown() {
         let key = "showCountdownInMenuBar"

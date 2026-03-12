@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		42A718772CE1C7DFBF92CB61 /* CustomDurationPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B424C3659E95DAFEC10CD66F /* CustomDurationPanel.swift */; };
 		4D61F45CA81601943FACC791 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458AA9CD1BA753D4DA05C501 /* NotificationManager.swift */; };
-		694974D0DAA19F991D9C8C3E /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DF1AFA9521983AFF749F5A /* MenuBarIcon.swift */; };
 		72CC1C9D73A95AE2080AEFFE /* PowerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D7AD01686A84D28B5AC31C /* PowerManager.swift */; };
 		7F5849E3A702B5395AADF045 /* BatteryMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB35FE440B2B1DBB7935FD99 /* BatteryMonitor.swift */; };
 		8FDB52571FDA63D4EDBDCE6D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195F127D94B9641A6B386FBC /* main.swift */; };
@@ -23,7 +22,6 @@
 
 /* Begin PBXFileReference section */
 		195F127D94B9641A6B386FBC /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		32DF1AFA9521983AFF749F5A /* MenuBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarIcon.swift; sourceTree = "<group>"; };
 		458AA9CD1BA753D4DA05C501 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		506225DD588B5A1F4A2E4159 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52D7AD01686A84D28B5AC31C /* PowerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerManager.swift; sourceTree = "<group>"; };
@@ -64,7 +62,6 @@
 				B424C3659E95DAFEC10CD66F /* CustomDurationPanel.swift */,
 				F1EB67F68D84C9138B8CBFB5 /* Info.plist */,
 				195F127D94B9641A6B386FBC /* main.swift */,
-				32DF1AFA9521983AFF749F5A /* MenuBarIcon.swift */,
 				8420796B05BA20F5FEF4650C /* MouseJiggler.swift */,
 				458AA9CD1BA753D4DA05C501 /* NotificationManager.swift */,
 				52D7AD01686A84D28B5AC31C /* PowerManager.swift */,
@@ -148,7 +145,6 @@
 				963826E6C56B13688AB8D0C7 /* AppDelegate.swift in Sources */,
 				7F5849E3A702B5395AADF045 /* BatteryMonitor.swift in Sources */,
 				42A718772CE1C7DFBF92CB61 /* CustomDurationPanel.swift in Sources */,
-				694974D0DAA19F991D9C8C3E /* MenuBarIcon.swift in Sources */,
 				A961AA84295CB87D1DF7FE0A /* MouseJiggler.swift in Sources */,
 				4D61F45CA81601943FACC791 /* NotificationManager.swift in Sources */,
 				72CC1C9D73A95AE2080AEFFE /* PowerManager.swift in Sources */,
